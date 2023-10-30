@@ -36,6 +36,6 @@ def upload_reviews(starting_url, page_count):
             print("Отзыв не получен")
 
 if __name__ == "__main__":
-    starting_url = "https://otzovik.com/reviews/bank_tinkoff_kreditnie_sistemi/"
-    page_count = 5
+    starting_url = "https://otzovik.com/reviews/set_magazinov_pyaterochka_russia/"
+    page_count = 250
     upload_reviews(starting_url, page_count)
