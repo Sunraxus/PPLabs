@@ -12,8 +12,9 @@ def upload_reviews(starting_url, page_count):
         print("User-Agent: ", user_agent)
         headers = {"User-Agent": user_agent}
         page_url = f"{starting_url}{page}"
-        time.sleep(20)
+        time.sleep(60)
         response = requests.get(page_url, headers=headers)
+        print(response.status_code)
         if response.status_code == 200:
             print("Отзыв получен")
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -33,3 +34,8 @@ def upload_reviews(starting_url, page_count):
                     file.write(review_text)
         else:
             print("Отзыв не получен")
+
+if __name__ == "__main__":
+    starting_url = "https://otzovik.com/reviews/bank_tinkoff_kreditnie_sistemi/"
+    page_count = 5
+    upload_reviews(starting_url, page_count)
