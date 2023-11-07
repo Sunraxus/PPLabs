@@ -10,10 +10,9 @@ def upload_reviews(starting_url, page_count):
         ua = UserAgent()
         user_agent = ua.random
         print("User-Agent: ", user_agent)
-        headers = {"User-Agent": user_agent}
         page_url = f"{starting_url}{page}"
         time.sleep(60)
-        response = requests.get(page_url, headers=headers)
+        response = requests.get(page_url, headers = {"User-Agent": user_agent})
         print(response.status_code)
         if response.status_code == 200:
             print("Отзыв получен")
