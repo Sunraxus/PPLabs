@@ -26,7 +26,6 @@ def create_annotation(path: str, ann: Annotation) -> None:
                 ann.add_line(dirs, file, folders[i-1])
         i += 1
 
-
 if __name__ == "__main__":
     path_the_dataset = "D:/PPLabs/lab1/dataset"
     annot = Annotation("file_annotation.csv")

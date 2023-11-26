@@ -5,7 +5,7 @@ import os, time
 
 def upload_reviews(starting_url, page_count):
     if not os.path.exists("dataset"):
-        os.makedirs("dataset")
+        os.makedirs("dataset")       
     for page in range(1, page_count + 1):
         ua = UserAgent()
         user_agent = ua.random
