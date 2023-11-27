@@ -5,12 +5,48 @@ from dataset_copying import dataset_copying
 from dataset_copying_random import dataset_copying_random
 from create_annot import create_annotation as crt
 import sys
+from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import (QPushButton, QInputDialog, QApplication,
                              QMainWindow, QFileDialog, QLabel)
 from PyQt6.QtCore import QSize, Qt
-from PyQt6 import QtGui, QtWidgets
 from PyQt6.QtGui import QPixmap
 
+
+class ReviewsDialog(QtWidgets.QDialog):   
+        def __init__(self, dataset_path, parent=None):
+            super(ReviewsDialog, self).__init__(parent)
+            self.dataset_path = dataset_path
+            self.iterator = AnIt(os.path.join(dataset_path, "1"))  # Используем итератор для рецензий
+            self.init_ui()
+
+        def init_ui(self):
+            self.setWindowTitle("Рецензии")
+            self.setMinimumSize(400, 400)
+
+            self.text_display = QtWidgets.QTextEdit(self)
+            self.text_display.setReadOnly(True)
+            self.text_display.setGeometry(QtCore.QRect(10, 10, 380, 280))
+
+            button_next = QPushButton('Следующая рецензия', self)
+            button_next.setGeometry(QtCore.QRect(10, 300, 180, 40))
+            button_next.clicked.connect(self.show_next_review)
+
+            button_close = QPushButton('Закрыть', self)
+            button_close.setGeometry(QtCore.QRect(200, 300, 180, 40))
+            button_close.clicked.connect(self.close)
+
+            self.show_next_review()
+
+        def show_next_review(self):
+            try:
+                next_file = self.iterator.__next__()
+                with open(os.path.join(self.iterator.directory, next_file), 'r') as file:
+                    text_content = file.read()
+                self.text_display.setPlainText(text_content)
+            except StopIteration:
+                self.text_display.setPlainText("Отзывы закончились.")
+            except OSError as err:
+                print(err)
 
 class MainWindow(QMainWindow):
 
@@ -39,47 +75,17 @@ class MainWindow(QMainWindow):
 
         button_dataset_random = self.add_button("Рандом датасета", 250, 50, 5, 150)
         button_dataset_random.clicked.connect(self.dataset_random)
-
-        path_1 = ann.first_file_text("1")
-        iterator_1 = AnIt(path_1)
-        path_2 = ann.first_file_text("2")
-        iterator_2 = AnIt(path_2)
-        path_3 = ann.first_file_text("3")
-        iterator_3 = AnIt(path_3)
-        path_4 = ann.first_file_text("4")
-        iterator_4 = AnIt(path_4)
-        path_5 = ann.first_file_text("5")
-        iterator_5 = AnIt(path_5)
         
-        button_next_1 = self.add_button("файл с номером звезды 1 следующий", 250, 50, 5, 200)
-        button_next_1.clicked.connect(lambda label="1", cur_iter=iterator_1: self.next(label, cur_iter))
-
-        button_next_2 = self.add_button("файл с номером звезды 2 следующий", 250, 50, 5, 250)
-        button_next_2.clicked.connect(lambda label="2", cur_iter=iterator_2: self.next(label, cur_iter))
-
-        button_next_3 = self.add_button("файл с номером звезды 3 следующий", 250, 50, 5, 300)
-        button_next_3.clicked.connect(lambda label="3", cur_iter=iterator_3: self.next(label, cur_iter))
-
-        button_next_4 = self.add_button("файл с номером звезды 4 следующий", 250, 50, 5, 350)
-        button_next_4.clicked.connect(lambda label="4", cur_iter=iterator_4: self.next(label, cur_iter))
-
-        button_next_5 = self.add_button("файл с номером звезды 5 следующий", 250, 50, 5, 400)
-        button_next_5.clicked.connect(lambda label="5", cur_iter=iterator_5: self.next(label, cur_iter))
-
+        button_reviews = self.add_button("Работа с рецензиями", 250, 50, 5, 200)
+        button_reviews.clicked.connect(self.open_reviews_dialog)
+         
         self.show()
-
-    def next(self, label: str, cur_iter: AnIt):
-        try:
-            next_file = cur_iter.__next__()
-            with open(os.path.join(cur_iter.directory, next_file), 'r') as file:
-                text_content = file.read()
-            self.image.setText(text_content)
-            self.adjustSize()
-
-        except StopIteration:
-            self.image.setText(f"Отзывы {label} закончились.")
-        except OSError as err:
-            print(err)
+    
+    def open_reviews_dialog(self):
+        dialog = ReviewsDialog(self.dataset_path)
+        dialog.exec()
+       
+    
         
     def add_button(self, name: str, size_x: int, size_y: int, pos_x: int, pos_y: int):
         button = QPushButton(name, self)
