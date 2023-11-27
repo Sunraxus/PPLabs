@@ -1,22 +1,16 @@
 import os
-import re 
+from typing import Optional
 
 
-def next_file(path: str):
-    if not os.path.exists(path):
-        raise FileExistsError(f'Этот {path} файл не существует.')
-    direct, filename = os.path.split(path) 
-    a = "".join(re.findall(r'\d', filename))
-    number = int(a) + 1
-    file_new = re.sub(a, f'{number:04d}', filename)
-    file_new = os.path.join(direct, file_new)
-    if os.path.exists(file_new):
-        return file_new
-    else:
-        return None
-
-if __name__ == "__main__":
-    path = "D:/PPLabs/lab2/copy_dataset"
-    file_path = os.path.join(path, '5_0001.txt')
-    file_path = next_file(file_path)
-    print(file_path)
+def print_next(class_mark: str, path) -> Optional[str]:
+    path = os.path.join(path, class_mark)
+    names_list = os.listdir(path)
+    for i in range(0, len(names_list)):
+        file_path = os.path.join(path, names_list[i])
+        yield file_path
+    yield None
+        
+if __name__ == '__main__':
+    path = "D:/PPLabs/lab2/dataset/";
+    for i in print_next('4', path):
+        print(i)
