@@ -13,4 +13,5 @@ def print_next(class_mark: str, path) -> Optional[str]:
 if __name__ == '__main__':
     path = "D:/PPLabs/lab2/dataset/";
     for i in print_next('4', path):
-        print(i)
+       print(i)
+    

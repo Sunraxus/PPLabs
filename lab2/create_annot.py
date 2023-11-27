@@ -1,20 +1,32 @@
 import os
 import csv
+import logging
 
 class Annotation:
     def __init__(self, filename: str):
         self.rows = 0
-        self.file_name = filename
+        self.filename = filename
+        self.__header = ['Absolute Path', 'Relative Path', 'Label']
 
-    def add_line(self, path: str, filename: str, rating: str) -> None:
-        with open(self.file_name, "a", encoding="utf-8", newline="") as f:
+    def add_line(self, path: str, filename: str, label: str) -> None:
+        with open(self.filename, "a", encoding="utf-8", newline="") as f:
             writer = csv.writer(f, quoting=csv.QUOTE_ALL)
             if self.rows == 0:
-                writer.writerow(["Абсолютный путь", "Относительный путь", "Рейтинг"])
-                self.rows += 1
-            writer.writerow([os.path.join(path, filename), os.path.relpath(os.path.join(path, filename)), rating])
+                writer.writerow(["Absolute Path", "Relative Path", "Label"])
+            writer.writerow([os.path.join(path, filename), os.path.relpath(os.path.join(path, filename)), label])
             self.rows += 1
 
+    def first_file_text(self, label: str):
+        res = [] 
+        try:
+            with open(self.filename, 'r') as file:
+                rows = csv.DictReader(file)
+                for row in rows:
+                    if row[self.__header[2]] == label:
+                        return row[self.__header[0]]
+        except OSError as err:
+            logging.warning(f' При попытке открытия аннотации {self.filename} произошла ошибка:\n{err}.')
+        return res[0]
 def create_annotation(path: str, ann: Annotation) -> None:
     folders = [] 
     i = 0
