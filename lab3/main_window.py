@@ -50,9 +50,37 @@ class MainWindow(QMainWindow):
         iterator_4 = AnIt(path_4)
         path_5 = ann.first_file_text("5")
         iterator_5 = AnIt(path_5)
+        
+        button_next_1 = self.add_button("файл с номером звезды 1 следующий", 250, 50, 5, 200)
+        button_next_1.clicked.connect(lambda label="1", cur_iter=iterator_1: self.next(label, cur_iter))
+
+        button_next_2 = self.add_button("файл с номером звезды 2 следующий", 250, 50, 5, 250)
+        button_next_2.clicked.connect(lambda label="2", cur_iter=iterator_2: self.next(label, cur_iter))
+
+        button_next_3 = self.add_button("файл с номером звезды 3 следующий", 250, 50, 5, 300)
+        button_next_3.clicked.connect(lambda label="3", cur_iter=iterator_3: self.next(label, cur_iter))
+
+        button_next_4 = self.add_button("файл с номером звезды 4 следующий", 250, 50, 5, 350)
+        button_next_4.clicked.connect(lambda label="4", cur_iter=iterator_4: self.next(label, cur_iter))
+
+        button_next_5 = self.add_button("файл с номером звезды 5 следующий", 250, 50, 5, 400)
+        button_next_5.clicked.connect(lambda label="5", cur_iter=iterator_5: self.next(label, cur_iter))
 
         self.show()
 
+    def next(self, label: str, cur_iter: AnIt):
+        try:
+            next_file = cur_iter.__next__()
+            with open(os.path.join(cur_iter.directory, next_file), 'r') as file:
+                text_content = file.read()
+            self.image.setText(text_content)
+            self.adjustSize()
+
+        except StopIteration:
+            self.image.setText(f"Отзывы {label} закончились.")
+        except OSError as err:
+            print(err)
+        
     def add_button(self, name: str, size_x: int, size_y: int, pos_x: int, pos_y: int):
         button = QPushButton(name, self)
         button.setFixedSize(QSize(size_x, size_y))
