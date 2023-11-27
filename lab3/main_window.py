@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color : #FFDEAD")
         self.setMinimumSize(650, 350)
         self.dataset_path = QFileDialog.getExistingDirectory(self, 'Выберите папку исходного датасета')
-        ann = Annotation("file_csv.csv")
+        ann = Annotation(os.path.join(self.dataset_path, "file_csv.csv"))
         if not os.path.exists("file_csv.csv"):
             crt(self.dataset_path, ann)
 
@@ -51,26 +51,6 @@ class MainWindow(QMainWindow):
         path_5 = ann.first_file_text("5")
         iterator_5 = AnIt(path_5)
 
-        button_next_1 = self.add_button("файл с номером звезды 1 следующий", 250, 50, 5, 200)
-        button_next_1.clicked.connect(lambda label="1", cur_iter=iterator_1: self.next(label, cur_iter))
-
-        button_next_2 = self.add_button("файл с номером звезды 2 следующий", 250, 50, 5, 250)
-        button_next_2.clicked.connect(lambda label="2", cur_iter=iterator_2: self.next(label, cur_iter))
-
-        button_next_3 = self.add_button("файл с номером звезды 3 следующий", 250, 50, 5, 250)
-        button_next_3.clicked.connect(lambda label="3", cur_iter=iterator_3: self.next(label, cur_iter))
-
-        button_next_4= self.add_button("файл с номером звезды 4 следующий", 250, 50, 5, 250)
-        button_next_4.clicked.connect(lambda label="4", cur_iter=iterator_4: self.next(label, cur_iter))
-
-        button_next_5 = self.add_button("файл с номером звезды 5 следующий", 250, 50, 5, 250)
-        button_next_5.clicked.connect(lambda label="5", cur_iter=iterator_5: self.next(label, cur_iter))
-
-        self.image = QLabel('Нажмите кнопку "файл с номером звезды 1,2,3,4, или 5 следующий.', self)
-        self.image.setStyleSheet("color : #800000")
-        self.image.resize(480, 320)
-        self.image.move(280, 40)
-
         self.show()
 
     def add_button(self, name: str, size_x: int, size_y: int, pos_x: int, pos_y: int):
@@ -79,23 +59,10 @@ class MainWindow(QMainWindow):
         button.move(pos_x, pos_y)
         return button
 
-    def next(self, label: str, cur_iter: AnIt):
-        try:
-            pixmap = QtGui.QPixmap(cur_iter.__iter__()).scaled(self.image.height(),
-                                                               self.image.width(), aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
-            self.image.setPixmap(pixmap)
-            self.resize(pixmap.size())
-            self.adjustSize()
-            cur_iter.__next__()
-        except StopIteration:
-            self.image.setText(f"Изображения {label} закончились.")
-        except OSError as err:
-            print(err)
-
     def create_annotation(self) -> None:
         text, ok = QInputDialog.getText(self, 'Ввод', 'Введите название файла-аннотации:')
         if ok:
-            a = Annotation(f"{str(text)}.csv")
+            a = Annotation(os.path.join(self.dataset_path, f"{str(text)}.csv"))
             crt(self.dataset_path, a)
 
     def dataset_copy(self):
@@ -104,7 +71,7 @@ class MainWindow(QMainWindow):
             return
         text, ok = QInputDialog.getText(self, 'Ввод', 'Введите название файла-аннотации:')
         if ok:
-            a = Annotation(f"{str(text)}.cvs")
+            a = Annotation(os.path.join(self.dataset_path, f"{str(text)}.csv"))
             dataset_copying(self.dataset_path, path_copy, a)
 
     def dataset_random(self):
@@ -113,7 +80,7 @@ class MainWindow(QMainWindow):
             return
         name, test = QInputDialog.getText(self, 'Ввод', 'Введите название файла-аннотации:')
         if test:
-            a = Annotation(f'{str(name)}.csv')
+            a = Annotation(os.path.join(self.dataset_path, f'{str(name)}.csv'))
             dataset_copying_random(self.dataset_path, path_copy, a)
 
 
