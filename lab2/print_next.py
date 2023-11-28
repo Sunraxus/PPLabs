@@ -3,6 +3,7 @@ from typing import Optional
 
 
 def print_next(class_mark: str, path) -> Optional[str]:
+    """this code creates a generator that returns the full paths to the files,. When all files are processed, the generator returns None."""
     path = os.path.join(path, class_mark)
     names_list = os.listdir(path)
     for i in range(0, len(names_list)):

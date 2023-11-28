@@ -1,6 +1,7 @@
 import os
 
 class AnnIterator:
+    """this code implements an iterator for traversing files in a directory starting from a specific index. Each call to __next__ returns the following file name"""
     def __init__(self, directory: str):
         self.directory = directory
         self.files = os.listdir(directory)

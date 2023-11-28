@@ -4,6 +4,7 @@ import shutil
 import random
 
 def dataset_copying_random(path: str, path_copy_random: str, ann: Annotation) -> None:
+    """This code performs a similar task of copying files and creating annotations, it also randomly renames the files being copied."""
     if not os.path.isdir(path_copy_random):
         os.mkdir(path_copy_random)
     folders = os.listdir(path)

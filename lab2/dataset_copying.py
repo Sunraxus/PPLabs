@@ -3,6 +3,7 @@ import os
 import shutil
 
 def dataset_copying(path: str, path_copy: str, ann: Annotation) -> None:
+    """This code copies files from the source directory to the new directory and simultaneously creates an annotation for the copied files."""
     if not os.path.isdir(path_copy):
         os.mkdir(path_copy)
     folders = os.listdir(path)

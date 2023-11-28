@@ -42,7 +42,7 @@ class ReviewsDialog(QtWidgets.QDialog):
                 next_file = self.iterator.__next__()
                 with open(os.path.join(self.iterator.directory, next_file), 'r') as file:
                     text_content = file.read()
-                self.text_display.setPlainText(text_content)
+                    self.text_display.setPlainText(text_content)
             except StopIteration:
                 self.text_display.setPlainText("Отзывы закончились.")
             except OSError as err:
