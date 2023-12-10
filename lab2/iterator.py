@@ -5,7 +5,7 @@ class AnnIterator:
     def __init__(self, directory: str):
         self.directory = directory
         self.files = os.listdir(directory)
-        self.current_index = 6
+        self.current_index = 0
 
     def __iter__(self):
         return self

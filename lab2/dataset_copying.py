@@ -2,6 +2,7 @@ from create_annot import Annotation
 import os
 import shutil
 
+
 def dataset_copying(path: str, path_copy: str, ann: Annotation) -> None:
     """This code copies files from the source directory to the new directory and simultaneously creates an annotation for the copied files."""
     if not os.path.isdir(path_copy):
@@ -11,8 +12,12 @@ def dataset_copying(path: str, path_copy: str, ann: Annotation) -> None:
         files = os.listdir(os.path.join(path, folder))
         for file in files:
             shutil.copy(os.path.join(path, folder, file), path_copy)
-            os.rename(os.path.join(path_copy, file), os.path.join(path_copy, f"{folder}_{file}"))
+            os.rename(
+                os.path.join(path_copy, file),
+                os.path.join(path_copy, f"{folder}_{file}"),
+            )
             ann.add_line(path_copy, f"{folder}_{file}", folder)
+
 
 if __name__ == "__main__":
     path = "D:/PPLabs/lab1/dataset"
