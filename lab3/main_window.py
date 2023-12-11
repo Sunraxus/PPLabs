@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Work with dataset")
-        self.setStyleSheet("background-color : #FFDEAD")
+        self.setStyleSheet("background-color : #D6D6D6")
         self.setMinimumSize(650, 350)
         self.dataset_path = QFileDialog.getExistingDirectory(
             self, "Выберите папку исходного датасета"
@@ -75,38 +75,38 @@ class MainWindow(QMainWindow):
             crt(self.dataset_path, ann)
 
         src = QLabel(f"Исходный датасет:\n{self.dataset_path}", self)
-        src.setFixedSize(QSize(250, 50))
+        src.setFixedSize(QSize(300, 50))
         src.move(5, 0)
 
         button_crt_annotation = self.add_button(
-            "Сформировать аннотацию", 250, 50, 5, 50
+            "Сформировать аннотацию исходного датасета", 300, 50, 5, 50
         )
         button_crt_annotation.clicked.connect(self.create_annotation)
 
-        button_dataset_copy = self.add_button("Скопировать датасет", 250, 50, 5, 100)
+        button_dataset_copy = self.add_button("Скопировать датасет", 300, 50, 5, 100)
         button_dataset_copy.clicked.connect(self.dataset_copy)
 
-        button_dataset_random = self.add_button("Рандом датасета", 250, 50, 5, 150)
+        button_dataset_random = self.add_button("Рандом датасета", 300, 50, 5, 150)
         button_dataset_random.clicked.connect(self.dataset_random)
 
         button_reviews = self.add_button(
-            "Работа c отзывами с 1 звездой", 250, 50, 5, 200
+            "Работа c отзывами с 1 звездой", 300, 50, 5, 200
         )
         button_reviews.clicked.connect(self.open_reviews_dialog)
 
-        button_reviews_1_star = self.add_button("Отзывы с 1 звездой", 250, 50, 5, 200)
+        button_reviews_1_star = self.add_button("Отзывы с 1 звездой", 300, 50, 5, 200)
         button_reviews_1_star.clicked.connect(lambda: self.open_reviews_dialog(1))
 
-        button_reviews_2_stars = self.add_button("Отзывы с 2 звездами", 250, 50, 5, 250)
+        button_reviews_2_stars = self.add_button("Отзывы с 2 звездами", 300, 50, 5, 250)
         button_reviews_2_stars.clicked.connect(self.open_reviews_dialog_2_stars)
 
-        button_reviews_3_stars = self.add_button("Отзывы с 3 звездами", 250, 50, 5, 300)
+        button_reviews_3_stars = self.add_button("Отзывы с 3 звездами", 300, 50, 5, 300)
         button_reviews_3_stars.clicked.connect(self.open_reviews_dialog_3_stars)
 
-        button_reviews_4_stars = self.add_button("Отзывы с 4 звездами", 250, 50, 5, 350)
+        button_reviews_4_stars = self.add_button("Отзывы с 4 звездами", 300, 50, 5, 350)
         button_reviews_4_stars.clicked.connect(self.open_reviews_dialog_4_stars)
 
-        button_reviews_5_stars = self.add_button("Отзывы с 5 звездами", 250, 50, 5, 400)
+        button_reviews_5_stars = self.add_button("Отзывы с 5 звездами", 300, 50, 5, 400)
         button_reviews_5_stars.clicked.connect(self.open_reviews_dialog_5_stars)
 
         self.show()
@@ -134,11 +134,16 @@ class MainWindow(QMainWindow):
         return button
 
     def create_annotation(self) -> None:
+        path_annot = QFileDialog.getExistingDirectory(
+            self, "Введите путь к папке куда хотите сохранить аннтоацию"
+        )
+        if not path_annot:
+            return
         text, ok = QInputDialog.getText(
             self, "Ввод", "Введите название файла-аннотации:"
         )
         if ok:
-            a = Annotation(os.path.join(self.dataset_path, f"{str(text)}.csv"))
+            a = Annotation(os.path.join(path_annot, f"{str(text)}.csv"))
             crt(self.dataset_path, a)
 
     def dataset_copy(self):
@@ -149,7 +154,7 @@ class MainWindow(QMainWindow):
             self, "Ввод", "Введите название файла-аннотации:"
         )
         if ok:
-            a = Annotation(os.path.join(self.dataset_path, f"{str(text)}.csv"))
+            a = Annotation(os.path.join(path_copy, f"{str(text)}.csv"))
             dataset_copying(self.dataset_path, path_copy, a)
 
     def dataset_random(self):
@@ -160,7 +165,7 @@ class MainWindow(QMainWindow):
             self, "Ввод", "Введите название файла-аннотации:"
         )
         if test:
-            a = Annotation(os.path.join(self.dataset_path, f"{str(name)}.csv"))
+            a = Annotation(os.path.join(path_copy, f"{str(name)}.csv"))
             dataset_copying_random(self.dataset_path, path_copy, a)
 
 
