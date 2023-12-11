@@ -20,6 +20,14 @@ from PyQt6.QtGui import QPixmap
 
 class ReviewsDialog(QtWidgets.QDialog):
     def __init__(self, dataset_path, star_rating, parent=None):
+        """
+        Конструктор класса ReviewsDialog.
+
+        Параметры:
+        - dataset_path (str): Путь к датасету.
+        - star_rating (int): Рейтинг отзывов, которые будут отображаться в диалоге.
+        - parent: Родительский объект (по умолчанию None).
+        """
         super(ReviewsDialog, self).__init__(parent)
         self.dataset_path = dataset_path
         self.star_rating = star_rating
@@ -27,6 +35,9 @@ class ReviewsDialog(QtWidgets.QDialog):
         self.init_ui()
 
     def init_ui(self):
+        """
+        Инициализация пользовательского интерфейса для диалога отображения рецензий.
+        """
         self.setWindowTitle("Рецензии")
         self.setMinimumSize(400, 400)
 
@@ -45,6 +56,9 @@ class ReviewsDialog(QtWidgets.QDialog):
         self.show_next_review()
 
     def show_next_review(self):
+        """
+        Отображает следующий отзыв из датасета в текстовом поле диалога.
+        """
         try:
             next_file = self.iterator.__next__()
             with open(
@@ -60,10 +74,16 @@ class ReviewsDialog(QtWidgets.QDialog):
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        """
+        Конструктор класса MainWindow.
+        """
         super(MainWindow, self).__init__()
         self.init_ui()
 
     def init_ui(self):
+        """
+        Инициализация пользовательского интерфейса основного окна приложения.
+        """
         self.setWindowTitle("Work with dataset")
         self.setStyleSheet("background-color : #D6D6D6")
         self.setMinimumSize(650, 350)
@@ -112,6 +132,12 @@ class MainWindow(QMainWindow):
         self.show()
 
     def open_reviews_dialog(self, star_rating):
+        """
+        Открывает диалог отображения рецензий для определенного рейтинга звезд.
+
+        Параметры:
+        - star_rating (int): Рейтинг отзывов, которые будут отображаться в диалоге.
+        """
         dialog = ReviewsDialog(self.dataset_path, star_rating)
         dialog.exec()
 
@@ -128,12 +154,28 @@ class MainWindow(QMainWindow):
         self.open_reviews_dialog(5)
 
     def add_button(self, name: str, size_x: int, size_y: int, pos_x: int, pos_y: int):
+        """
+        Создает и добавляет кнопку на главное окно приложения.
+
+        Параметры:
+        - name (str): Название кнопки.
+        - size_x (int): Ширина кнопки.
+        - size_y (int): Высота кнопки.
+        - pos_x (int): Позиция по оси X.
+        - pos_y (int): Позиция по оси Y.
+
+        Возвращает:
+        - QPushButton: Созданная кнопка.
+        """
         button = QPushButton(name, self)
         button.setFixedSize(QSize(size_x, size_y))
         button.move(pos_x, pos_y)
         return button
 
     def create_annotation(self) -> None:
+        """
+        Создает и сохраняет аннотацию для исходного датасета.
+        """
         path_annot = QFileDialog.getExistingDirectory(
             self, "Введите путь к папке куда хотите сохранить аннтоацию"
         )
@@ -147,6 +189,9 @@ class MainWindow(QMainWindow):
             crt(self.dataset_path, a)
 
     def dataset_copy(self):
+        """
+        Копирует датасет в указанное место с заданным именем аннотации.
+        """
         path_copy = QFileDialog.getExistingDirectory(self, "Введите путь к папке")
         if not path_copy:
             return
@@ -158,6 +203,9 @@ class MainWindow(QMainWindow):
             dataset_copying(self.dataset_path, path_copy, a)
 
     def dataset_random(self):
+        """
+        Создает копию датасета с перемешанными данными и сохраняет аннотацию.
+        """
         path_copy = QFileDialog.getExistingDirectory(self, "Введите путь к папке")
         if not path_copy:
             return
