@@ -8,6 +8,7 @@ import sys
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import (
     QPushButton,
+    QMessageBox,
     QInputDialog,
     QApplication,
     QMainWindow,
@@ -86,10 +87,18 @@ class MainWindow(QMainWindow):
         """
         self.setWindowTitle("Work with dataset")
         self.setStyleSheet("background-color : #D6D6D6")
-        self.setMinimumSize(650, 350)
+        self.setMinimumSize(700, 550)
         self.dataset_path = QFileDialog.getExistingDirectory(
             self, "Выберите папку исходного датасета"
         )
+        if not self.dataset_path:
+            QMessageBox.critical(
+                self,
+                "Ошибка",
+                "Не выбран исходный датасет. Программа закрыта.",
+                QMessageBox.StandardButton.Ok,
+            )
+            sys.exit()
         ann = Annotation(os.path.join(self.dataset_path, "file_csv.csv"))
         if not os.path.exists("file_csv.csv"):
             crt(self.dataset_path, ann)
@@ -108,11 +117,6 @@ class MainWindow(QMainWindow):
 
         button_dataset_random = self.add_button("Рандом датасета", 300, 50, 5, 150)
         button_dataset_random.clicked.connect(self.dataset_random)
-
-        button_reviews = self.add_button(
-            "Работа c отзывами с 1 звездой", 300, 50, 5, 200
-        )
-        button_reviews.clicked.connect(self.open_reviews_dialog)
 
         button_reviews_1_star = self.add_button("Отзывы с 1 звездой", 300, 50, 5, 200)
         button_reviews_1_star.clicked.connect(lambda: self.open_reviews_dialog(1))
@@ -187,6 +191,13 @@ class MainWindow(QMainWindow):
         if ok:
             a = Annotation(os.path.join(path_annot, f"{str(text)}.csv"))
             crt(self.dataset_path, a)
+            success_message = QMessageBox()
+            success_message.setWindowTitle("Успешно!")
+            success_message.setText(
+                f"Аннотация успешно создана по следующей директории:\n{path_annot}"
+            )
+            success_message.setIcon(QMessageBox.Icon.Information)
+            success_message.exec()
 
     def dataset_copy(self):
         """
@@ -201,6 +212,13 @@ class MainWindow(QMainWindow):
         if ok:
             a = Annotation(os.path.join(path_copy, f"{str(text)}.csv"))
             dataset_copying(self.dataset_path, path_copy, a)
+            success_message = QMessageBox()
+            success_message.setWindowTitle("Успешно!")
+            success_message.setText(
+                f"Новый датасет и аннотация успешно созданы по следующей директории:\n{path_copy}"
+            )
+            success_message.setIcon(QMessageBox.Icon.Information)
+            success_message.exec()
 
     def dataset_random(self):
         """
@@ -215,6 +233,13 @@ class MainWindow(QMainWindow):
         if test:
             a = Annotation(os.path.join(path_copy, f"{str(name)}.csv"))
             dataset_copying_random(self.dataset_path, path_copy, a)
+            success_message = QMessageBox()
+            success_message.setWindowTitle("Успешно!")
+            success_message.setText(
+                f"Новый датасет и аннотация успешно созданы по следующей директории:\n{path_copy}"
+            )
+            success_message.setIcon(QMessageBox.Icon.Information)
+            success_message.exec()
 
 
 if __name__ == "__main__":
